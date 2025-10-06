@@ -7,7 +7,7 @@ min-height: 100vh;
 
 
 }
-.container{
+.main{
     flex:1;
 
 }
@@ -21,6 +21,12 @@ min-height: 100vh;
     height: 5rem;
     margin-bottom: 10px;
     background-color: rgb(255, 255, 255);
+}
+@media (max-width: 768px) {
+  .navbar-collapse {
+    position: static !important;   /* makes it flow with the document */
+    width: 100%;
+  }
 }
 
 .fa-compass {
