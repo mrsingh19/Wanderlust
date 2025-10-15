@@ -37,6 +37,7 @@ router.post("/",
         
     const newListing = new  Listing(req.body.listing);
     await newListing.save();
+    req.flash("success","New Listing Created");
        // to create a. new document in the mongoose memory 
     res.redirect("/listings");
 
@@ -49,6 +50,7 @@ router.put("/:id",validateListing,
     wrapAsync(async (req,res)=>{
 let{id}=req.params;
 await Listing.findByIdAndUpdate(id,{...req.body.listing});
+ req.flash("success","Changes saved");
 res.redirect(`/listings/${id}`);
 
 
@@ -58,6 +60,11 @@ res.redirect(`/listings/${id}`);
 router.get("/:id",wrapAsync(async(req,res)=>{
 let {id} = req .params;
  const listing = await Listing.findById(id).populate("reviews");
+ if(!listing){
+    req.flash("error","Listing Does NOT Exist");
+    return res.redirect("/listings"); // here adding return was importantant or else res.render the below on e was geting called 
+
+ }
 res.render("listings/show.ejs",{listing});
 
 }))
@@ -66,8 +73,13 @@ res.render("listings/show.ejs",{listing});
 router.get("/:id/edit",wrapAsync(async(req,res)=>{
 let {id} = req.params;
 // console.log("working");
-let details = await Listing.findById(id);
-res.render("listings/edit.ejs",{details})
+let listing = await Listing.findById(id);
+if(!listing){
+    req.flash("error","Listing Does NOT Exist");
+    return res.redirect("/listings"); // here adding return was importantant or else res.render the below on e was geting called 
+
+ }
+res.render("listings/edit.ejs",{listing})
 
 }))
 ;
@@ -76,6 +88,7 @@ res.render("listings/edit.ejs",{details})
 router.delete("/:id",wrapAsync(async (req,res)=>{
     let{id}=req.params;
     await Listing.findByIdAndDelete(id);
+    req.flash("success","Listing Deleted");
     res.redirect("/listings");
 }));
 
