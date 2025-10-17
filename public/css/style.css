@@ -24,10 +24,23 @@ min-height: 100vh;
 }
 @media (max-width: 768px) {
   .navbar-collapse {
-    position: static !important;   /* makes it flow with the document */
+    position: absolute !important; 
+    top: 5rem; /* equal to your .navbar height */
+    left: 0;
     width: 100%;
+    background-color: white;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+
+  .navbar-nav {
+    padding: 1rem ;
+    margin-left: 2rem;
   }
 }
+
 
 .fa-compass {
     color:rgb(215, 80, 80);
