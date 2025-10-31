@@ -72,11 +72,11 @@ const sessionOptions = {
 };
 
 
-// app.get("/", (req, res) => {
-//     console.dir(req.cookies);
-//     res.send("Hey its working");
+app.get("/", (req, res) => {
+    console.dir(req.cookies);
+    res.redirect("/listings");
     
-// });
+});
 
 
 app.use(session(sessionOptions));
