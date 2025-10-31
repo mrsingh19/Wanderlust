@@ -7,7 +7,9 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const PORT = 3001;
-MONGO_URL = "mongodb://127.0.0.1:27017/WanderLust";
+// MONGO_URL = "mongodb://127.0.0.1:27017/WanderLust";
+const dburl = process.env.ATLASDB_URL;
+
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
@@ -15,6 +17,7 @@ const ExpressError = require("./utils/ExpressError.js");
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const session  = require("express-session");
+const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const passport  = require("passport");
 const LocalStrategy = require("passport-local");
@@ -41,10 +44,22 @@ main()
     console.log(err);
 });
 async function main() {
-    await mongoose.connect(MONGO_URL);
+    await mongoose.connect(dburl);
 }
 
+const store = MongoStore.create({
+    mongoUrl:dburl,
+    crypto:{
+        secret:"mysupersecretcode"
+    },
+    touchAfter:24*3600,
+    
+});
+store.on("error",() =>{
+    console.log("error in mongo session store",err);
+});
 const sessionOptions = {
+    store,
     secret:"mysupersecretcode",
     resave: false,
     saveUninitialized: true,
@@ -62,6 +77,8 @@ const sessionOptions = {
 //     res.send("Hey its working");
     
 // });
+
+
 app.use(session(sessionOptions));
 app.use(flash());
 
